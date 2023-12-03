@@ -21,6 +21,41 @@
 
 # working on docker and connecting it with azure devops
 
+# trigger:
+# - main
+
+# # Use a Microsoft-hosted agent
+# pool:
+#   vmImage: 'ubuntu-latest'  # Specifies which VM image to use
+
+# variables:
+#   # Change these variables to your Docker Hub username and image name
+#   dockerHubUsername: 'yourDockerHubUsername'
+#   imageName: 'mukand-portfolio'
+#   tag: '$(Build.BuildId)'
+
+# steps:
+# - task: Docker@2
+#   displayName: 'Build Docker image'
+#   inputs:
+#     command: 'build'
+#     dockerfile: 'Dockerfile'
+#     tags: |
+#       $(imageName):$(tag)
+#     arguments: '-f Dockerfile .'
+
+# - task: Docker@2
+#   displayName: 'Push Docker image to Docker Hub'
+#   inputs:
+#     command: 'push'
+#     repository: $(dockerHubUsername)/$(imageName)
+#     tags: |
+#       $(tag)
+#     # The Docker Registry service connection created in Azure DevOps should be referenced here
+#     containerRegistry: 'dockerHubServiceConnectionName'
+
+
+
 trigger:
 - main
 
@@ -29,10 +64,8 @@ pool:
   vmImage: 'ubuntu-latest'  # Specifies which VM image to use
 
 variables:
-  # Change these variables to your Docker Hub username and image name
-  dockerHubUsername: 'yourDockerHubUsername'
-  imageName: 'mukand-portfolio'
-  tag: '$(Build.BuildId)'
+  imageName: 'mukand/devops'  # Your Docker Hub username followed by the image name
+  tag: '$(Build.BuildId)'     # Tag the image with the build ID
 
 steps:
 - task: Docker@2
@@ -43,13 +76,16 @@ steps:
     tags: |
       $(imageName):$(tag)
     arguments: '-f Dockerfile .'
+    # Make sure the service connection name matches the one you created in Azure DevOps
+    containerRegistry: 'mukand'
 
 - task: Docker@2
   displayName: 'Push Docker image to Docker Hub'
   inputs:
     command: 'push'
-    repository: $(dockerHubUsername)/$(imageName)
+    repository: $(imageName)
     tags: |
       $(tag)
-    # The Docker Registry service connection created in Azure DevOps should be referenced here
-    containerRegistry: 'dockerHubServiceConnectionName'
+    # Make sure the service connection name matches the one you created in Azure DevOps
+    containerRegistry: 'mukand'
+
