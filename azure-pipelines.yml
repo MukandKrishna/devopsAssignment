@@ -84,5 +84,5 @@ steps:
     repository: $(imageName)
     tags: |
       $(tag)
-    containerRegistry: 'dockerHubServiceConnection'  # The name of the Docker service connection in Azure DevOps
+    containerRegistry: 'mukand'  # The name of the Docker service connection in Azure DevOps
     # repository: 'mukand/devops'  # Your Docker Hub repository
