@@ -8,6 +8,9 @@
 
 # pool:
 #   name: Default  # name of self-hosted agent pool
+# # OR  Use a Microsoft-hosted agent
+# pool:
+#   vmImage: 'ubuntu-latest'  # Specifies which VM image to use
 
 # steps:
 # - task: ArchiveFiles@2
@@ -16,6 +19,8 @@
 #     includeRootFolder: false
 # - task: PublishBuildArtifacts@1
 
+# working on docker and connecting it with azure devops
+
 trigger:
 - main
 
@@ -23,9 +28,28 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'  # Specifies which VM image to use
 
+variables:
+  # Change these variables to your Docker Hub username and image name
+  dockerHubUsername: 'yourDockerHubUsername'
+  imageName: 'mukand-portfolio'
+  tag: '$(Build.BuildId)'
+
 steps:
-- task: ArchiveFiles@2
+- task: Docker@2
+  displayName: 'Build Docker image'
   inputs:
-    rootFolderOrFile: '$(build.sourcesDirectory)'
-    includeRootFolder: false
-- task: PublishBuildArtifacts@1
+    command: 'build'
+    dockerfile: 'Dockerfile'
+    tags: |
+      $(imageName):$(tag)
+    arguments: '-f Dockerfile .'
+
+- task: Docker@2
+  displayName: 'Push Docker image to Docker Hub'
+  inputs:
+    command: 'push'
+    repository: $(dockerHubUsername)/$(imageName)
+    tags: |
+      $(tag)
+    # The Docker Registry service connection created in Azure DevOps should be referenced here
+    containerRegistry: 'dockerHubServiceConnectionName'
