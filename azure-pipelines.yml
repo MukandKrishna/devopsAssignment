@@ -63,19 +63,18 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  imageName: 'mukand/devops'  # Docker Hub username followed by the repository name
-  tag: '$(Build.BuildId)'     # Tag the image with the build ID
+  imageName: 'mukand/devops'  # The image name in 'username/repository' format
+  tag: '$(Build.BuildId)'    # Tags the image with the build ID
 
 steps:
 - task: Docker@2
   displayName: 'Build Docker image'
   inputs:
     command: 'build'
-    dockerfile: 'Dockerfile'   # Assuming your Dockerfile is in the root of your repository
+    dockerfile: '$(Build.SourcesDirectory)/Dockerfile'  # Path to the Dockerfile
     tags: |
       $(imageName):$(tag)
-    containerRegistry: 'dockerHubServiceConnection'  # The name of the Docker service connection in Azure DevOps
-    # repository: 'mukand/devops'  # Your Docker Hub repository
+    containerRegistry: 'mukand'  # The service connection name
 
 - task: Docker@2
   displayName: 'Push Docker image to Docker Hub'
@@ -84,5 +83,4 @@ steps:
     repository: $(imageName)
     tags: |
       $(tag)
-    containerRegistry: 'mukand'  # The name of the Docker service connection in Azure DevOps
-    # repository: 'mukand/devops'  # Your Docker Hub repository
+    containerRegistry: 'mukand'  # The service connection name
