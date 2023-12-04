@@ -3,31 +3,31 @@
 # # Add steps that build, run tests, deploy, and more:
 # # https://aka.ms/yaml
 # slack integrated
-trigger:
-- main
+# trigger:
+# - main
 
+# # pool:
+#   # name: Default  # name of self-hosted agent pool
+# # OR  Use a Microsoft-hosted agent
 # pool:
-  # name: Default  # name of self-hosted agent pool
-# OR  Use a Microsoft-hosted agent
-pool:
-  vmImage: 'ubuntu-latest'  # Specifies which VM image to use
+#   vmImage: 'ubuntu-latest'  # Specifies which VM image to use
 
-steps:
-- task: ArchiveFiles@2
-  inputs:
-    rootFolderOrFile: '$(build.sourcesDirectory)'
-    includeRootFolder: false
-- task: PublishBuildArtifacts@1
+# steps:
+# - task: ArchiveFiles@2
+#   inputs:
+#     rootFolderOrFile: '$(build.sourcesDirectory)'
+#     includeRootFolder: false
+# - task: PublishBuildArtifacts@1
 
-- powershell: |
-    $slackWebhookUrl = "https://hooks.slack.com/services/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"
-    $body = @{
-        text = "Azure DevOps pipeline succeeded!"
-    } | ConvertTo-Json
+# - powershell: |
+#     $slackWebhookUrl = "https://hooks.slack.com/services/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"
+#     $body = @{
+#         text = "Azure DevOps pipeline succeeded!"
+#     } | ConvertTo-Json
 
-    Invoke-RestMethod -Uri $slackWebhookUrl -Method Post -Body $body -ContentType 'application/json'
-  displayName: 'Send Slack Notification'
-  condition: succeeded()  # Run the PowerShell script only when the previous steps succeed
+#     Invoke-RestMethod -Uri $slackWebhookUrl -Method Post -Body $body -ContentType 'application/json'
+#   displayName: 'Send Slack Notification'
+#   condition: succeeded()  # Run the PowerShell script only when the previous steps succeed
 
 
 
