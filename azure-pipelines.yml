@@ -3,8 +3,8 @@
 # # Add steps that build, run tests, deploy, and more:
 # # https://aka.ms/yaml
 # slack integrated
-# trigger:
-# - main
+trigger:
+- main
 
 # pool:
   # name: Default  # name of self-hosted agent pool
@@ -20,68 +20,3 @@ steps:
 - task: PublishBuildArtifacts@1
 
 
-# working on docker and connecting it with azure devops
-
-# trigger:
-# - main
-
-# # Use a Microsoft-hosted agent
-# pool:
-#   vmImage: 'ubuntu-latest'  # Specifies which VM image to use
-
-# variables:
-#   # Change these variables to your Docker Hub username and image name
-#   dockerHubUsername: 'yourDockerHubUsername'
-#   imageName: 'mukand-portfolio'
-#   tag: '$(Build.BuildId)'
-
-# steps:
-# - task: Docker@2
-#   displayName: 'Build Docker image'
-#   inputs:
-#     command: 'build'
-#     dockerfile: 'Dockerfile'
-#     tags: |
-#       $(imageName):$(tag)
-#     arguments: '-f Dockerfile .'
-
-# - task: Docker@2
-#   displayName: 'Push Docker image to Docker Hub'
-#   inputs:
-#     command: 'push'
-#     repository: $(dockerHubUsername)/$(imageName)
-#     tags: |
-#       $(tag)
-#     # The Docker Registry service connection created in Azure DevOps should be referenced here
-#     containerRegistry: 'dockerHubServiceConnectionName'
-
-
-
-# trigger:
-# - main
-
-# pool:
-#   vmImage: 'ubuntu-latest'
-
-# variables:
-#   imageName: 'mukand/devops'  # The image name in 'username/repository' format
-#   tag: '$(Build.BuildId)'    # Tags the image with the build ID
-
-# steps:
-# - task: Docker@2
-#   displayName: 'Build Docker image'
-#   inputs:
-#     command: 'build'
-#     dockerfile: '$(Build.SourcesDirectory)/Dockerfile'  # Path to the Dockerfile
-#     tags: |
-#       $(imageName):$(tag)
-#     containerRegistry: 'mukand'  # The service connection name
-
-# - task: Docker@2
-#   displayName: 'Push Docker image to Docker Hub'
-#   inputs:
-#     command: 'push'
-#     repository: $(imageName)
-#     tags: |
-#       $(tag)
-#     containerRegistry: 'mukand'  # The service connection name
