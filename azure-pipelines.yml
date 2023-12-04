@@ -6,7 +6,7 @@
 trigger:
 - main
 
-pool:
+# pool:
   # name: Default  # name of self-hosted agent pool
 # OR  Use a Microsoft-hosted agent
 pool:
