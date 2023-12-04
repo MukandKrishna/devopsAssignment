@@ -19,17 +19,6 @@ steps:
     includeRootFolder: false
 - task: PublishBuildArtifacts@1
 
-- powershell: |
-    $slackWebhookUrl = "https://hooks.slack.com/services/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"
-    $body = @{
-        text = "Azure DevOps pipeline succeeded!"
-    } | ConvertTo-Json
-
-    Invoke-RestMethod -Uri $slackWebhookUrl -Method Post -Body $body -ContentType 'application/json'
-  displayName: 'Send Slack Notification'
-  condition: succeeded()  # Run the PowerShell script only when the previous steps succeed
-
-
 
 # working on docker and connecting it with azure devops
 
