@@ -17,7 +17,7 @@ steps:
 - task: PublishBuildArtifacts@1
 
 - powershell: |
-    $slackWebhookUrl = "https://hooks.slack.com/services/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"
+    $slackWebhookUrl = "https://hooks.slack.com/services/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"
     $body = @{
         text = "Azure DevOps pipeline succeeded!"
     } | ConvertTo-Json
