@@ -3,21 +3,33 @@
 # # Add steps that build, run tests, deploy, and more:
 # # https://aka.ms/yaml
 
-# trigger:
-# - main
+trigger:
+- main
 
-# pool:
-#   name: Default  # name of self-hosted agent pool
-# # OR  Use a Microsoft-hosted agent
-# pool:
-#   vmImage: 'ubuntu-latest'  # Specifies which VM image to use
+pool:
+  # name: Default  # name of self-hosted agent pool
+# OR  Use a Microsoft-hosted agent
+pool:
+  vmImage: 'ubuntu-latest'  # Specifies which VM image to use
 
-# steps:
-# - task: ArchiveFiles@2
-#   inputs:
-#     rootFolderOrFile: '$(build.sourcesDirectory)'
-#     includeRootFolder: false
-# - task: PublishBuildArtifacts@1
+steps:
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '$(build.sourcesDirectory)'
+    includeRootFolder: false
+- task: PublishBuildArtifacts@1
+
+- powershell: |
+    $slackWebhookUrl = "https://hooks.slack.com/services/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"
+    $body = @{
+        text = "Azure DevOps pipeline succeeded!"
+    } | ConvertTo-Json
+
+    Invoke-RestMethod -Uri $slackWebhookUrl -Method Post -Body $body -ContentType 'application/json'
+  displayName: 'Send Slack Notification'
+  condition: succeeded()  # Run the PowerShell script only when the previous steps succeed
+
+
 
 # working on docker and connecting it with azure devops
 
@@ -56,31 +68,31 @@
 
 
 
-trigger:
-- main
+# trigger:
+# - main
 
-pool:
-  vmImage: 'ubuntu-latest'
+# pool:
+#   vmImage: 'ubuntu-latest'
 
-variables:
-  imageName: 'mukand/devops'  # The image name in 'username/repository' format
-  tag: '$(Build.BuildId)'    # Tags the image with the build ID
+# variables:
+#   imageName: 'mukand/devops'  # The image name in 'username/repository' format
+#   tag: '$(Build.BuildId)'    # Tags the image with the build ID
 
-steps:
-- task: Docker@2
-  displayName: 'Build Docker image'
-  inputs:
-    command: 'build'
-    dockerfile: '$(Build.SourcesDirectory)/Dockerfile'  # Path to the Dockerfile
-    tags: |
-      $(imageName):$(tag)
-    containerRegistry: 'mukand'  # The service connection name
+# steps:
+# - task: Docker@2
+#   displayName: 'Build Docker image'
+#   inputs:
+#     command: 'build'
+#     dockerfile: '$(Build.SourcesDirectory)/Dockerfile'  # Path to the Dockerfile
+#     tags: |
+#       $(imageName):$(tag)
+#     containerRegistry: 'mukand'  # The service connection name
 
-- task: Docker@2
-  displayName: 'Push Docker image to Docker Hub'
-  inputs:
-    command: 'push'
-    repository: $(imageName)
-    tags: |
-      $(tag)
-    containerRegistry: 'mukand'  # The service connection name
+# - task: Docker@2
+#   displayName: 'Push Docker image to Docker Hub'
+#   inputs:
+#     command: 'push'
+#     repository: $(imageName)
+#     tags: |
+#       $(tag)
+#     containerRegistry: 'mukand'  # The service connection name
